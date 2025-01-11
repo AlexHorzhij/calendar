@@ -1,7 +1,7 @@
 import { Task } from "../types/calendar";
 
-const API_BASE_URL = "http://localhost:3001/tasks";
-const HOLIDAY_API_BASE_URL = "https://date.nager.at/api/v3";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const HOLIDAY_API_BASE_URL = process.env.REACT_APP_HOLIDAY_API_BASE_URL;
 
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
