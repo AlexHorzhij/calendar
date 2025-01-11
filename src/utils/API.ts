@@ -32,7 +32,7 @@ export const API = {
 
   addNewTask: async (task: Task) => {
     try {
-      const response = await fetch(API_BASE_URL, {
+      const response = await fetch(`${API_BASE_URL}/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(task),
@@ -46,7 +46,7 @@ export const API = {
 
   getAllTasks: async (): Promise<Task[]> => {
     try {
-      const response = await fetch(API_BASE_URL, {
+      const response = await fetch(`${API_BASE_URL}/tasks`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -59,7 +59,7 @@ export const API = {
 
   editTask: async (id: string, task: Task) => {
     try {
-      const url = `${API_BASE_URL}/${id}`;
+      const url = `${API_BASE_URL}/tasks/${id}`;
       const response = await fetch(url, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -74,7 +74,7 @@ export const API = {
 
   deleteTask: async (id: string) => {
     try {
-      const url = `${API_BASE_URL}/${id}`;
+      const url = `${API_BASE_URL}/tasks/${id}`;
       const response = await fetch(url, {
         method: "DELETE",
       });
