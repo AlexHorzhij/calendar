@@ -7,7 +7,6 @@ import {
   Box,
   Select,
   SelectChangeEvent,
-  InputBase,
   TextField,
 } from "@mui/material";
 import { API } from "../utils/API";
