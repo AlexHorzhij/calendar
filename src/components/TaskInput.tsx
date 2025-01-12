@@ -28,9 +28,24 @@ export const TaskInput = ({
 
     addNewTask(task);
     startTransition(async () => {
-      setIsNewTask(false);
       setAllTasks(await API.getAllTasks());
+      setIsNewTask(false);
     });
+  };
+
+  const onBlurInput = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (!e.target.value) {
+      setIsNewTask(false);
+    } else {
+      e.target.form?.requestSubmit();
+    }
+  };
+
+  const onEsc = (e: React.KeyboardEvent) => {
+    if (e && e.code === "Escape") {
+      setIsNewTask(false);
+      (e.target as HTMLInputElement).form?.reset();
+    }
   };
 
   return (
@@ -42,13 +57,8 @@ export const TaskInput = ({
         variant="standard"
         autoFocus={true}
         disabled={isPending}
-        onBlur={(e) => {
-          if (!e.target.value) {
-            setIsNewTask(false);
-          } else {
-            e.target.form?.requestSubmit();
-          }
-        }}
+        onBlur={onBlurInput}
+        onKeyDown={onEsc}
       />
       <input type="hidden" name="date" value={dayData.date.toDateString()} />
     </form>

@@ -15,7 +15,7 @@ type Country = {
   countryCode: string;
 };
 
-export const CalendarControls = ({
+export const CalendarFilter = ({
   setCountry,
   currentCountry = "UA",
 }: {
@@ -33,7 +33,7 @@ export const CalendarControls = ({
   }, []);
 
   return (
-    <Box sx={{ width: "15rem", marginBottom: "1rem" }}>
+    <Box sx={{ width: "15rem", marginBottom: "0.5rem" }}>
       <FormControl fullWidth variant="standard">
         <InputLabel id="country-select-label">Country</InputLabel>
         <Select

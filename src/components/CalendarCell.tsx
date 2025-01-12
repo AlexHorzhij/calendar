@@ -15,26 +15,49 @@ const CellWrapper = styled.div`
 const CellContainer = styled.div<{
   $isCurrentMonth: boolean;
   $isToday: boolean;
+  $isDragActive: boolean;
+  $isOver: boolean;
 }>`
+  position: relative;
   height: 120px;
+  width: 100%;
   padding: 0.5rem;
-  flex-grow: 1;
   border: ${VARS.border};
-  border-color: ${(props) => (props.$isToday ? COLORS.holiday : COLORS.border)};
-  background: ${(props) =>
-    props.$isCurrentMonth
-      ? COLORS.currentCellBackground
-      : COLORS.cellBackground};
-  overflow: hidden;
-  min-height: 100%;
-  &:hover,
-  &:focus {
-    height: fit-content;
-    width: 100%;
+  border-color: ${({ $isToday }) =>
+    $isToday ? COLORS.holiday : COLORS.border};
+  background: ${({ $isCurrentMonth }) =>
+    $isCurrentMonth ? COLORS.currentCellBackground : COLORS.cellBackground};
+  overflow: ${({ $isDragActive }) => ($isDragActive ? "unset" : "hidden")};
+  ${({ $isOver }) =>
+    $isOver
+      ? `-webkit-box-shadow: 0px 4px 13px -6px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 4px 13px -6px rgba(0,0,0,0.75);
+box-shadow: 0px 4px 13px -6px rgba(0,0,0,0.75);`
+      : ""};
+
+  transition: all 0.3s ease-in-out;
+
+  ${({ $isDragActive }) =>
+    $isDragActive
+      ? `height: 120px;
+    min-height: fit-content;
     position: absolute;
     z-index: 10;
     background: ${COLORS.background};
+    overflow: unset;`
+      : ""};
+
+  &:hover,
+  &:focus {
+    height: 120px;
+    min-height: fit-content;
+    position: absolute;
+    z-index: 2;
+    background: ${COLORS.background};
     overflow: unset;
+    -webkit-box-shadow: 0px 4px 13px -6px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 4px 13px -6px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 4px 13px -6px rgba(0, 0, 0, 0.75);
   }
 `;
 
@@ -57,10 +80,12 @@ export const CalendarCell = ({
   dayData,
   holidays,
   optimisticTasks,
+  dragging,
 }: {
   dayData: Day;
   holidays: Holiday[];
   optimisticTasks: Task[];
+  dragging: string | null;
 }) => {
   const [isNewTask, setIsNewTask] = useState(false);
   const [allTasks, setAllTasks] = useState<Task[]>([]);
@@ -80,13 +105,16 @@ export const CalendarCell = ({
     (task) => new Date(task.date).toDateString() === dayID
   );
 
-  const { setNodeRef } = useDroppable({ id: dayID });
+  const isDragActive = tasksToday.find((item) => item.id === dragging);
+  const { setNodeRef, isOver } = useDroppable({ id: dayID });
 
   return (
     <CellWrapper>
       <CellContainer
         $isCurrentMonth={dayData.isCurrentMonth}
         $isToday={isToday}
+        $isDragActive={!!isDragActive}
+        $isOver={isOver}
         ref={setNodeRef}
       >
         <CellHeader>
@@ -123,7 +151,12 @@ export const CalendarCell = ({
         <TaskList>
           {!!tasksToday.length &&
             tasksToday.map((task) => (
-              <TaskItem key={task.id} data={task} setAllTasks={setAllTasks} />
+              <TaskItem
+                key={task.id}
+                data={task}
+                setAllTasks={setAllTasks}
+                isDragging={task.id === dragging}
+              />
             ))}
         </TaskList>
       </CellContainer>

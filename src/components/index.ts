@@ -1,6 +1,6 @@
 import { Calendar } from "./Calendar";
 import { CalendarCell } from "./CalendarCell";
-import { CalendarControls } from "./CalendarControls";
+import { CalendarFilter } from "./CalendarFilter";
 import { TaskItem } from "./TaskItem";
 import { TaskInput } from "./TaskInput";
 import { EditTaskInput } from "./EditTaskInput";
@@ -8,7 +8,7 @@ import { EditTaskInput } from "./EditTaskInput";
 export {
   Calendar,
   CalendarCell,
-  CalendarControls,
+  CalendarFilter,
   TaskItem,
   TaskInput,
   EditTaskInput,

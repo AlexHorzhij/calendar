@@ -1,7 +1,7 @@
 import { Task } from "../types/calendar";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-const HOLIDAY_API_BASE_URL = process.env.REACT_APP_HOLIDAY_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const HOLIDAY_API_BASE_URL = import.meta.env.VITE_HOLIDAY_API_BASE_URL;
 
 const handleResponse = async (response: Response) => {
   if (!response.ok) {

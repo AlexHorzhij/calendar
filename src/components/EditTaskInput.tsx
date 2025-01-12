@@ -33,6 +33,21 @@ export const EditTaskInput = ({
     });
   };
 
+  const onEsc = (e: React.KeyboardEvent) => {
+    if (e && e.code === "Escape") {
+      setIsEditing(false);
+      (e.target as HTMLInputElement).form?.reset();
+    }
+  };
+
+  const onBlurInput = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (!e.target.value) {
+      setIsEditing(false);
+    } else {
+      e.target.form?.requestSubmit();
+    }
+  };
+
   return (
     <form action={submitForm}>
       <TextField
@@ -44,13 +59,8 @@ export const EditTaskInput = ({
         disabled={isPending}
         value={taskData.title}
         onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
-        onBlur={(e) => {
-          if (!e.target.value) {
-            setIsEditing(false);
-          } else {
-            e.target.form?.requestSubmit();
-          }
-        }}
+        onBlur={onBlurInput}
+        onKeyDown={onEsc}
       />
     </form>
   );

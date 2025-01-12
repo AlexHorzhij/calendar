@@ -12,14 +12,20 @@ import { EditTaskInput } from "./";
 const TaskWrapper = styled.div`
   width: 100%;
   height: auto;
-  padding: 0.3rem 0.25rem;
+  padding: 0.3rem 1.25rem 0.3rem 0.25rem;
   background-color: ${COLORS.taskBackground};
   border: ${VARS.border};
   border-radius: 0.5rem;
   cursor: grab;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
 `;
-const TaskItemWrapper = styled.div`
+
+const TaskItemWrapper = styled.div<{ $isDragging: boolean }>`
   position: relative;
+  z-index: ${({ $isDragging }) => $isDragging && 100};
+
   &:hover button {
     display: flex;
     pointer-events: auto;
@@ -29,9 +35,11 @@ const TaskItemWrapper = styled.div`
 export const TaskItem = ({
   data,
   setAllTasks,
+  isDragging,
 }: {
   data: Task;
   setAllTasks: Dispatch<SetStateAction<Task[]>>;
+  isDragging: boolean;
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -46,14 +54,13 @@ export const TaskItem = ({
   };
 
   const showInput = () => {
-    console.log("e: ", "e");
     setIsEditing(true);
   };
 
   return (
     <>
       {!isEditing && (
-        <TaskItemWrapper>
+        <TaskItemWrapper $isDragging={isDragging}>
           <TaskWrapper
             {...attributes}
             {...listeners}
@@ -62,21 +69,24 @@ export const TaskItem = ({
           >
             {data.title}
           </TaskWrapper>
-          <IconButton
-            size="small"
-            sx={{
-              position: "absolute",
-              top: "0",
-              right: "0",
-              display: "none",
-              pointerEvents: "auto",
-            }}
-            onClick={showInput}
-          >
-            <MdEdit />
-          </IconButton>
+          {!isDragging && (
+            <IconButton
+              size="small"
+              sx={{
+                position: "absolute",
+                top: "0",
+                right: "0",
+                display: "none",
+                pointerEvents: "auto",
+              }}
+              onClick={showInput}
+            >
+              <MdEdit />
+            </IconButton>
+          )}
         </TaskItemWrapper>
       )}
+
       {isEditing && (
         <EditTaskInput
           data={data}

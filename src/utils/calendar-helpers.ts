@@ -70,3 +70,15 @@ export function getMonthDays(month: number = new Date().getMonth()): {
 
   return { days, year, date };
 }
+
+type DataNameType = "short" | "long";
+
+export function getWeekDaysName(
+  type: DataNameType = "short",
+  lang: string = "EN"
+) {
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(2023, 1, i + 1);
+    return Intl.DateTimeFormat(lang, { weekday: type }).format(date);
+  });
+}

@@ -6,19 +6,23 @@ import {
   useTransition,
 } from "react";
 import styled from "styled-components";
-import { closestCenter, DndContext, DragEndEvent } from "@dnd-kit/core";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragStartEvent,
+} from "@dnd-kit/core";
 import { Divider } from "@mui/material";
 
 import { Day, Task } from "../types/calendar";
 import { API } from "../utils/API";
-import { WEEK_DAYS_NAME } from "../utils/data";
 import { CalendarCell } from "./";
+import { getWeekDaysName } from "../utils/calendar-helpers";
 
 const CalendarHeader = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  height: 50px;
-  margin-bottom: 1rem;
+  height: 1rem;
 `;
 
 const HeaderDay = styled.div`
@@ -45,6 +49,7 @@ export const Calendar = ({
 }) => {
   const [holidays, setHolidays] = useState<any>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [dragging, setDragging] = useState<string | null>(null);
 
   const [_, startTransition] = useTransition();
 
@@ -68,7 +73,11 @@ export const Calendar = ({
     }
   );
 
-  async function handleDragEnd(event: DragEndEvent) {
+  const handleDragStart = (event: DragStartEvent) => {
+    setDragging(event.active.id.toString());
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     const activeTaskData = active.data.current?.data;
@@ -87,18 +96,25 @@ export const Calendar = ({
         });
       });
     }
-  }
+    setDragging(null);
+  };
+
+  const weekDaysName = getWeekDaysName();
 
   return (
     <>
       <CalendarHeader>
-        {WEEK_DAYS_NAME.map((day) => (
+        {weekDaysName.map((day) => (
           <HeaderDay key={day}>{day}</HeaderDay>
         ))}
       </CalendarHeader>
 
       <Divider sx={{ my: 2 }} />
-      <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
+      <DndContext
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        collisionDetection={closestCenter}
+      >
         <Suspense fallback={"Calendar is loading..."}>
           <CalendarGrid>
             {days.map((day) => (
@@ -107,6 +123,7 @@ export const Calendar = ({
                 dayData={day}
                 holidays={holidays}
                 optimisticTasks={optimisticTasks}
+                dragging={dragging}
               />
             ))}
           </CalendarGrid>
