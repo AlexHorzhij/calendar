@@ -43,9 +43,11 @@ const CalendarGrid = styled.div`
 export const Calendar = ({
   days,
   country,
+  taskFilter,
 }: {
   days: Day[];
   country: string;
+  taskFilter: string;
 }) => {
   const [holidays, setHolidays] = useState<any>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -101,6 +103,10 @@ export const Calendar = ({
 
   const weekDaysName = getWeekDaysName();
 
+  const filteredTasks = optimisticTasks.filter((task) =>
+    task.title.toLowerCase().includes(taskFilter.toLowerCase())
+  );
+
   return (
     <>
       <CalendarHeader>
@@ -122,7 +128,7 @@ export const Calendar = ({
                 key={day.date.toISOString()}
                 dayData={day}
                 holidays={holidays}
-                optimisticTasks={optimisticTasks}
+                optimisticTasks={filteredTasks}
                 dragging={dragging}
               />
             ))}

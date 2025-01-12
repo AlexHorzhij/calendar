@@ -146,6 +146,7 @@ export const CalendarCell = ({
             dayData={dayData}
             setIsNewTask={setIsNewTask}
             setAllTasks={setAllTasks}
+            tasksNumber={tasksToday.length}
           />
         )}
         <TaskList>

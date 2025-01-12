@@ -9,10 +9,12 @@ export const TaskInput = ({
   dayData,
   setIsNewTask,
   setAllTasks,
+  tasksNumber,
 }: {
   dayData: Day;
   setIsNewTask: Dispatch<SetStateAction<boolean>>;
   setAllTasks: Dispatch<SetStateAction<Task[]>>;
+  tasksNumber: number;
 }) => {
   const [isPending, startTransition] = useTransition();
 
@@ -24,6 +26,7 @@ export const TaskInput = ({
       id: crypto.randomUUID(),
       title: taskTitle as string,
       date: new Date(taskDate as string),
+      order: tasksNumber + 1,
     };
 
     addNewTask(task);

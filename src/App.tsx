@@ -41,13 +41,19 @@ const ButtonsWrapper = styled.h1`
 function App() {
   const [month, setMonth] = useState<number>(new Date().getMonth());
   const [country, setCountry] = useState<string>("UA");
+  const [taskFilter, setTaskFilter] = useState<string>("");
+  console.log("taskFilter: ", taskFilter);
   const { days, year, date } = getMonthDays(month);
 
   return (
     <AppContainer>
       <ContentWrapper>
         <Header>
-          <CalendarFilter setCountry={setCountry} currentCountry={country} />
+          <CalendarFilter
+            setTaskFilter={setTaskFilter}
+            setCountry={setCountry}
+            currentCountry={country}
+          />
           <Title>
             {date.toLocaleString("en-EN", { month: "long" })} {year}
           </Title>
@@ -70,7 +76,7 @@ function App() {
             </Button>
           </ButtonsWrapper>
         </Header>
-        <Calendar days={days} country={country} />
+        <Calendar days={days} country={country} taskFilter={taskFilter} />
       </ContentWrapper>
     </AppContainer>
   );
