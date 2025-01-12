@@ -42,7 +42,6 @@ function App() {
   const [month, setMonth] = useState<number>(new Date().getMonth());
   const [country, setCountry] = useState<string>("UA");
   const [taskFilter, setTaskFilter] = useState<string>("");
-  console.log("taskFilter: ", taskFilter);
   const { days, year, date } = getMonthDays(month);
 
   return (
